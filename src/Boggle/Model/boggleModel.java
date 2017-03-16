@@ -1,5 +1,7 @@
 package Boggle.Model;
 
+import javafx.scene.layout.Pane;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -17,7 +19,7 @@ public class boggleModel {
     String fileName;
 
     public boggleModel(){
-        fileName = "src/woordenlijst.txt";
+        fileName = "src/Boggle/woordenlijst.txt";
         boggleList = new char[4][4];
     }
 
@@ -33,8 +35,27 @@ public class boggleModel {
         System.out.println(words.toString());
     }
 
+    // Google tri trees ??
+
     public void searchBoard(){
-        System.out.println("searching for words.");
+        System.out.println("Searching the board for words.");
+        for (int col = 0; col < 4; col++) {
+            for (int row = 0; row < 4; row++) {
+                if (isWord(boggleList[col][row])){
+                    System.out.println(boggleList[col][row] + " was in the dict.");
+                }
+            }
+        }
+        System.out.println("Search completed.");
+    }
+
+
+    boolean isWord(char str)
+    {
+        if (words.contains(Character.toString(str))){
+            return true;
+        }
+        return false;
     }
 
     public static void generatecharArrayBoggleList(){

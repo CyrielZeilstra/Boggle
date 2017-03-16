@@ -30,14 +30,10 @@ public class BoggleController {
     @FXML
     public TextField logBox;
 
-
-
     private boggleModel model = new boggleModel();
 
     @FXML
     public void initialize() {
-
-        boggleModel.generatecharArrayBoggleList();
 
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -46,12 +42,12 @@ public class BoggleController {
             }
         });
 
-
-        // On startup generate a boggleList and draw it on the grid.
+        boggleModel.generatecharArrayBoggleList();
+        // draw Generated list on the grid.
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 StackPane letterSquare = new StackPane();
-                Text t = new Text("" + model.getBoggleList()[row][col]);
+                Text t = new Text("" + boggleModel.getBoggleList()[row][col]);
                 t.setFont(new Font(50));
                 letterSquare.getChildren().add(t);
                 letterSquare.setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -64,5 +60,7 @@ public class BoggleController {
             mainGrid.getColumnConstraints().add(new ColumnConstraints(5, Control.USE_COMPUTED_SIZE, Double.POSITIVE_INFINITY, Priority.ALWAYS, HPos.CENTER, true));
             mainGrid.getRowConstraints().add(new RowConstraints(5, Control.USE_COMPUTED_SIZE, Double.POSITIVE_INFINITY, Priority.ALWAYS, VPos.CENTER, true));
         }
+
+        model.readList();
     }
 }
