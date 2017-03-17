@@ -18,7 +18,7 @@ public class boggleModel {
     ArrayList<String> words = new ArrayList<>();
     String fileName;
 
-    public boggleModel(){
+    public boggleModel() {
         fileName = "src/Boggle/woordenlijst.txt";
         boggleList = new char[4][4];
     }
@@ -37,11 +37,28 @@ public class boggleModel {
 
     // Google tri trees ??
 
-    public void searchBoard(){
+    public void searchBoard() {
         System.out.println("Searching the board for words.");
         for (int col = 0; col < 4; col++) {
             for (int row = 0; row < 4; row++) {
-                if (isWord(boggleList[col][row])){
+                char letter = boggleList[col][row];
+                
+                try {
+                    System.out.println(letter + "" + boggleList[col-1][row -1]);
+                    System.out.println(letter + "" +boggleList[col][row-1]);
+                    System.out.println(letter + "" +boggleList[col+1][row-1]);
+
+                    System.out.println(letter + "" +boggleList[col -1][row]);
+                    System.out.println(letter + "" +boggleList[col +1 ][row]);
+
+                    System.out.println(letter + "" +boggleList[col-1][row+1]);
+                    System.out.println(letter + "" +boggleList[col][row+1]);
+                    System.out.println(letter + "" +boggleList[col+1][row+1]);
+
+                } catch (IndexOutOfBoundsException e){
+                    continue;
+                }
+                if (isWord(boggleList[col][row])) {
                     System.out.println(boggleList[col][row] + " was in the dict.");
                 }
             }
@@ -50,15 +67,14 @@ public class boggleModel {
     }
 
 
-    boolean isWord(char str)
-    {
-        if (words.contains(Character.toString(str))){
+    boolean isWord(char str) {
+        if (words.contains(Character.toString(str))) {
             return true;
         }
         return false;
     }
 
-    public static void generatecharArrayBoggleList(){
+    public static void generatecharArrayBoggleList() {
         for (int i = 0; i < 4; i++) {
             for (int b = 0; b < 4; b++) {
                 Random r = new Random();
