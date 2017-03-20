@@ -1,6 +1,6 @@
 package Boggle.Controller;
 
-import Boggle.Model.boggleModel;
+import Boggle.Board.Board;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -30,24 +31,27 @@ public class BoggleController {
     @FXML
     public TextField logBox;
 
-    private boggleModel model = new boggleModel();
+    private Board board = new Board();
 
     @FXML
     public void initialize() {
+        drawBoardOnInterface();
 
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                model.searchBoard();
+                board.searchBoard();
             }
         });
+    }
 
-        boggleModel.generatecharArrayBoggleList();
+    public void drawBoardOnInterface() {
         // draw Generated list on the grid.
+        System.out.println("board is : " + Arrays.deepToString(Board.getBoggleBoard()));
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 StackPane letterSquare = new StackPane();
-                Text t = new Text("" + boggleModel.getBoggleList()[row][col]);
+                Text t = new Text("" + Board.getBoggleBoard()[row][col]);
                 t.setFont(new Font(50));
                 letterSquare.getChildren().add(t);
                 letterSquare.setBorder(new Border(new BorderStroke(Color.BLACK,
@@ -60,7 +64,5 @@ public class BoggleController {
             mainGrid.getColumnConstraints().add(new ColumnConstraints(5, Control.USE_COMPUTED_SIZE, Double.POSITIVE_INFINITY, Priority.ALWAYS, HPos.CENTER, true));
             mainGrid.getRowConstraints().add(new RowConstraints(5, Control.USE_COMPUTED_SIZE, Double.POSITIVE_INFINITY, Priority.ALWAYS, VPos.CENTER, true));
         }
-
-        model.readList();
     }
 }
