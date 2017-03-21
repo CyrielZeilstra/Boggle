@@ -34,11 +34,12 @@ public class Board {
     int row = 0;
     int col = 0;
 
-    public void doMoves(String root){
-        String prefix = root;
+    public void doMoves(boardCell cell){
+        StringBuilder prefix;
+        String letter = Character.toString(cell.getCharacterInCell());
 
-        if (trie.search(root)){
-            foundWords.add(root);
+        if (trie.search(prefix)){
+            foundWords.add(prefix);
         }
 
         boolean u, d, r, l;
@@ -50,8 +51,9 @@ public class Board {
         //up
         if (u) {
             Object move = boggleBoard[row - 1][col];
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
+            if (trie.startsWith(letter + move)) {
+                prefix.append(letter).append(move);
+                doMoves(prefix);
             }
         }
 
@@ -107,7 +109,6 @@ public class Board {
         //down right
         if (d && r) {
             Object move = boggleBoard[row + 1][col + 1];
-
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -119,7 +120,8 @@ public class Board {
         for (row = 0; row < 4; row++) {
             for (col = 0; col < 4; col++) {
                 String root = Character.toString(boggleBoard[row][col]);
-                doMoves(root);
+                boardCell root2 = new boardCell(row, col , boggleBoard[row][col]);
+                doMoves(root2);
             }
         }
 
