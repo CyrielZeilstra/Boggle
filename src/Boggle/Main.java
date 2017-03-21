@@ -1,9 +1,7 @@
 package Boggle;
 
 import Boggle.Board.Board;
-import Boggle.Board.Trie;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,7 +19,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         // Generate a new board on startup
-
         Board.generateNewBoggleBoard();
 
         // Start interface

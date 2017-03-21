@@ -1,4 +1,4 @@
-package Boggle.Board;
+package Boggle.WordlistTrie;
 
 import java.util.HashMap;
 

@@ -3,31 +3,27 @@ package Boggle.Board;
 /**
  * Created by Cyriel on 21-3-2017.
  */
-public final class boardCell {
+final class boardCell {
 
-    int row;
-    int col;
-    char characterInCell;
+    private int row;
+    private int col;
+    private char characterInCell;
 
-    public boardCell(int row, int col, char characterInCell) {
+    boardCell(int row, int col, char characterInCell) {
         this.row = row;
         this.col = col;
         this.characterInCell = characterInCell;
     }
 
-    public int getRow() {
+    int getRow() {
         return row;
     }
 
-    public int getCol() {
+    int getCol() {
         return col;
     }
 
-    public char getCharacterInCell() {
-        return characterInCell;
-    }
-
-    public String getCharacterInCellAsString(){
+    String getCharacterInCellAsString(){
         return Character.toString(characterInCell);
     }
 }

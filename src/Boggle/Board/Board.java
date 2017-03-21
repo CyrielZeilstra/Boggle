@@ -1,72 +1,69 @@
 package Boggle.Board;
 
-import Boggle.Controller.BoggleController;
-import com.sun.javafx.tk.Toolkit;
-import javafx.concurrent.Task;
+import Boggle.WordlistTrie.Trie;
 
-import javax.swing.tree.TreeNode;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Cyriel on 17-3-2017.
  */
 public class Board {
-    static char[][] boggleBoard = new char[4][4];
-    public static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
+    private static char[][] boggleBoard = new char[10][10];
+    private static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
-    ArrayList<String> foundWords;
-    TrieNode root;
-    Trie trie;
+    private ArrayList<String> foundWords;
+    private Trie trie;
 
     public Board() {
-        root = new TrieNode();
         trie = new Trie();
         trie.readList();
         foundWords = new ArrayList<>();
     }
 
-    // http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
-    // https://www.toptal.com/java/the-trie-a-neglected-data-structure
+    private String recursiveSearch(LinkedList<boardCell> usedCells) {
+        String prefix = getWord(usedCells);
 
-    public String recursiveSearch(boardCell root) {
-        StringBuilder prefix = new StringBuilder(root.getCharacterInCellAsString());
-        if (trie.search(prefix.toString())) {
-            System.out.println("Found word : " + prefix.toString());
-            foundWords.add(prefix.toString());
-        }
-
-        System.out.println("tested prefix : " + prefix.toString());
-        if (trie.startsWith(prefix.toString())) {
-            for (boardCell a : getMoves(root)) {
-                prefix.append(a.getCharacterInCellAsString());
-                System.out.println("there is a word with prefix : " + prefix.toString());
-                recursiveSearch(a);
-
-                //      System.out.println("Original cell : " + root.getCharacterInCellAsString() + " , move cell : "+ a.getCharacterInCellAsString());
+        // If our prefix is a word add it to the word list
+        // if it is not already added.
+        if (trie.search(prefix)) {
+            if (!foundWords.contains(prefix)) {
+                foundWords.add(prefix);
             }
         }
-        return null;
+
+        // If a word starts with the current prefix, grab the moves for the usedCell
+        if (trie.startsWith(prefix)) {
+            LinkedList<boardCell> moves = getMoves(usedCells);
+            for (boardCell a : moves) {
+                // Add the current cell to the usedCell list so it wont be used again for this word.
+                usedCells.add(a);
+                prefix += recursiveSearch(usedCells);
+                usedCells.pollLast();
+            }
+        }
+        return prefix;
+    }
+
+    private String getWord(List<boardCell> usedCells) {
+        StringBuilder sb = new StringBuilder(usedCells.size());
+        for (boardCell cell : usedCells) {
+            sb.append(getBoardCell(cell.getRow(), cell.getCol()).getCharacterInCellAsString());
+        }
+        return sb.toString();
     }
 
 
-    public ArrayList<boardCell> getMoves(boardCell cell) {
-        ArrayList<boardCell> PossibleMoves = new ArrayList<>();
+    private LinkedList<boardCell> getMoves(LinkedList<boardCell> usedCells) {
+        LinkedList<boardCell> PossibleMoves = new LinkedList<>();
 
-        int row = cell.getRow();
-        int col = cell.getCol();
-//        if (trie.search(prefix)) {
-//            foundWords.add(prefix);
-//        }
+        int row = usedCells.peekLast().getRow();
+        int col = usedCells.peekLast().getCol();
 
         boolean u, d, r, l;
-        u = cell.getRow() - 1 >= 0;
-        d = cell.getRow() + 1 < 4;
-        r = cell.getCol() + 1 < 4;
-        l = cell.getCol() - 1 >= 0;
+        u = row - 1 >= 0;
+        d = row + 1 < boggleBoard.length;
+        r = col + 1 < boggleBoard.length;
+        l = col - 1 >= 0;
 
         //up
         if (u) {
@@ -102,10 +99,12 @@ public class Board {
         if (d && r) {
             PossibleMoves.add(getBoardCell(row + 1, col + 1));
         }
+
+        PossibleMoves.removeAll(usedCells);
         return PossibleMoves;
     }
 
-    public boardCell getBoardCell(int row, int col) {
+    private boardCell getBoardCell(int row, int col) {
         for (boardCell a : cellsOnBoard) {
             if (a.getRow() == row && a.getCol() == col) {
                 return a;
@@ -116,27 +115,29 @@ public class Board {
 
     public ArrayList<String> searchBoard() {
         System.out.println("Searching the board for words.");
-//        for (row = 0; row < 4; row++) {
-//            for (col = 0; col < 4; col++) {
+        LinkedList<boardCell> usedCells = new LinkedList<>();
         for (boardCell cell : cellsOnBoard) {
-            recursiveSearch(cell);
+            // We don't want to use the root cell so we add it to the list.
+            usedCells.add(cell);
+            // Recursively search every cell around the root cell.
+            recursiveSearch(usedCells);
+            // Remove the last element in the list (the root cell).
+            usedCells.pollLast();
         }
-
         System.out.println("Search completed.");
         return foundWords;
     }
 
 
     public static void generateNewBoggleBoard() {
-        for (int i = 0; i < 4; i++) {
-            for (int b = 0; b < 4; b++) {
+        for (int i = 0; i < boggleBoard.length; i++) {
+            for (int b = 0; b < boggleBoard.length; b++) {
                 Random r = new Random();
                 char c = (char) (r.nextInt(26) + 'a');
                 cellsOnBoard.add(new boardCell(i, b, c));
                 boggleBoard[i][b] = c;
             }
         }
-        System.out.println("generated list : " + Arrays.deepToString(boggleBoard));
     }
 
     public static char[][] getBoggleBoard() {

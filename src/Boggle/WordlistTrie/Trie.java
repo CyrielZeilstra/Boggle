@@ -1,4 +1,6 @@
-package Boggle.Board;
+package Boggle.WordlistTrie;
+
+import Boggle.WordlistTrie.TrieNode;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
