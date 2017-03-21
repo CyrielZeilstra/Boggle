@@ -12,64 +12,114 @@ import java.util.Random;
 public class Board {
     static char[][] boggleBoard = new char[4][4];
 
-    private TrieNode root;
+    TrieNode root;
+    Trie trie;
 
-    public Board(){
+    public Board() {
         root = new TrieNode();
+        trie = new Trie();
+        trie.readList();
     }
 
     // http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
     // https://www.toptal.com/java/the-trie-a-neglected-data-structure
 
-    public void searchBoard() {
-        System.out.println("Searching the board for words.");
+    int row = 0;
+    int col = 0;
+
+    public void doMoves(String root){
         ArrayList<String> combinations = new ArrayList<>();
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 4; col++) {
-                String root = Character.toString(boggleBoard[row][col]);
-                String testword = "koek";
-                boolean u, d, r, l;
-                u = row - 1 >= 0;
-                d = row + 1 < 4;
-                r = col + 1 < 4;
-                l = col - 1 >= 0;
+        String prefix = root;
 
-                //up
-                if (u) {
-                    combinations.add(root + boggleBoard[row - 1][col]);
-                }
+        boolean u, d, r, l;
+        u = row - 1 >= 0;
+        d = row + 1 < 4;
+        r = col + 1 < 4;
+        l = col - 1 >= 0;
 
-                if (d) {
-                    //down
-                    combinations.add(root + boggleBoard[row + 1][col]);
-                }
-                //right
-                if (r) {
-                    combinations.add(root + boggleBoard[row][col + 1]);
-                }
-                //left
-                if (l) {
-                    combinations.add(root + boggleBoard[row][col - 1]);
-                }
-                //upleft
-                if (u && l) {
-                    combinations.add(root + boggleBoard[row - 1][col - 1]);
-                }
-                //upright
-                if (u && r) {
-                    combinations.add(root + boggleBoard[row - 1][col + 1]);
-                }
-                //downleft
-                if (d && l) {
-                    combinations.add(root + boggleBoard[row + 1][col - 1]);
-                }
-                //down right
-                if (d && r) {
-                    combinations.add(root + boggleBoard[row + 1][col + 1]);
-                }
+        //up
+        if (u) {
+            Object move = boggleBoard[row - 1][col];
+            combinations.add(prefix + boggleBoard[row - 1][col]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
             }
         }
-        System.out.println(combinations);
+
+        //down
+        if (d) {
+            Object move = boggleBoard[row + 1][col];
+            combinations.add(prefix + boggleBoard[row + 1][col]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+
+        //right
+        if (r) {
+            Object move = boggleBoard[row][col + 1];
+            combinations.add(prefix + boggleBoard[row][col + 1]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+        //left
+        if (l) {
+            Object move = boggleBoard[row][col - 1];
+            combinations.add(prefix + boggleBoard[row][col - 1]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+        //upleft
+        if (u && l) {
+            Object move = boggleBoard[row - 1][col - 1];
+            combinations.add(prefix + boggleBoard[row - 1][col - 1]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+        //upright
+        if (u && r) {
+            Object move = boggleBoard[row - 1][col + 1];
+            combinations.add(prefix + move);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+        //downleft
+        if (d && l) {
+            Object move = boggleBoard[row + 1][col - 1];
+            combinations.add(prefix + boggleBoard[row + 1][col - 1]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+        //down right
+        if (d && r) {
+            Object move = boggleBoard[row + 1][col + 1];
+            combinations.add(prefix + boggleBoard[row + 1][col + 1]);
+            if (trie.startsWith(prefix + move)) {
+                doMoves(prefix + move);
+            }
+        }
+    }
+
+    public void searchBoard() {
+        System.out.println("Searching the board for words.");
+        for (row = 0; row < 4; row++) {
+            for (col = 0; col < 4; col++) {
+                String root = Character.toString(boggleBoard[row][col]);
+                doMoves(root);
+            }
+        }
+
+//        for (String pre : combinations) {
+//            System.out.println("looking for : " + pre);
+//            System.out.println(trie.startsWith(pre));
+//        }
+
+        System.out.println(trie.search("zweven"));
         System.out.println("Search completed.");
     }
 

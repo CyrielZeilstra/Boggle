@@ -1,7 +1,7 @@
 package Boggle;
 
 import Boggle.Board.Board;
-import Boggle.Dictionary.Dictionary;
+import Boggle.Board.Trie;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,9 +21,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         // Generate a new board on startup
         Board.generateNewBoggleBoard();
-
-        // Build a dictionary from the wordlist.
-        Dictionary.readList();
 
         // Start interface
         launch(args);
