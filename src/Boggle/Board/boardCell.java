@@ -26,4 +26,8 @@ public final class boardCell {
     public char getCharacterInCell() {
         return characterInCell;
     }
+
+    public String getCharacterInCellAsString(){
+        return Character.toString(characterInCell);
+    }
 }

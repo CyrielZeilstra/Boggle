@@ -16,6 +16,7 @@ import java.util.Random;
  */
 public class Board {
     static char[][] boggleBoard = new char[4][4];
+    public static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
     ArrayList<String> foundWords;
     TrieNode root;
@@ -31,98 +32,94 @@ public class Board {
     // http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
     // https://www.toptal.com/java/the-trie-a-neglected-data-structure
 
-    int row = 0;
-    int col = 0;
-
-    public void doMoves(boardCell cell){
-        StringBuilder prefix;
-        String letter = Character.toString(cell.getCharacterInCell());
-
-        if (trie.search(prefix)){
-            foundWords.add(prefix);
+    public String recursiveSearch(boardCell root) {
+        StringBuilder prefix = new StringBuilder(root.getCharacterInCellAsString());
+        if (trie.search(prefix.toString())) {
+            System.out.println("Found word : " + prefix.toString());
+            foundWords.add(prefix.toString());
         }
 
+        System.out.println("tested prefix : " + prefix.toString());
+        if (trie.startsWith(prefix.toString())) {
+            for (boardCell a : getMoves(root)) {
+                prefix.append(a.getCharacterInCellAsString());
+                System.out.println("there is a word with prefix : " + prefix.toString());
+                recursiveSearch(a);
+
+                //      System.out.println("Original cell : " + root.getCharacterInCellAsString() + " , move cell : "+ a.getCharacterInCellAsString());
+            }
+        }
+        return null;
+    }
+
+
+    public ArrayList<boardCell> getMoves(boardCell cell) {
+        ArrayList<boardCell> PossibleMoves = new ArrayList<>();
+
+        int row = cell.getRow();
+        int col = cell.getCol();
+//        if (trie.search(prefix)) {
+//            foundWords.add(prefix);
+//        }
+
         boolean u, d, r, l;
-        u = row - 1 >= 0;
-        d = row + 1 < 4;
-        r = col + 1 < 4;
-        l = col - 1 >= 0;
+        u = cell.getRow() - 1 >= 0;
+        d = cell.getRow() + 1 < 4;
+        r = cell.getCol() + 1 < 4;
+        l = cell.getCol() - 1 >= 0;
 
         //up
         if (u) {
-            Object move = boggleBoard[row - 1][col];
-            if (trie.startsWith(letter + move)) {
-                prefix.append(letter).append(move);
-                doMoves(prefix);
-            }
+            PossibleMoves.add(getBoardCell(row - 1, col));
         }
 
         //down
         if (d) {
-            Object move = boggleBoard[row + 1][col];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row + 1, col));
         }
 
         //right
         if (r) {
-            Object move = boggleBoard[row][col + 1];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row, col + 1));
         }
         //left
         if (l) {
-            Object move = boggleBoard[row][col - 1];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row, col - 1));
         }
         //upleft
         if (u && l) {
-            Object move = boggleBoard[row - 1][col - 1];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row - 1, col - 1));
         }
         //upright
         if (u && r) {
-            Object move = boggleBoard[row - 1][col + 1];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row - 1, col + 1));
         }
         //downleft
         if (d && l) {
-            Object move = boggleBoard[row + 1][col - 1];
-
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
-            }
+            PossibleMoves.add(getBoardCell(row + 1, col - 1));
         }
         //down right
         if (d && r) {
-            Object move = boggleBoard[row + 1][col + 1];
-            if (trie.startsWith(prefix + move)) {
-                doMoves(prefix + move);
+            PossibleMoves.add(getBoardCell(row + 1, col + 1));
+        }
+        return PossibleMoves;
+    }
+
+    public boardCell getBoardCell(int row, int col) {
+        for (boardCell a : cellsOnBoard) {
+            if (a.getRow() == row && a.getCol() == col) {
+                return a;
             }
         }
+        return null;
     }
 
     public ArrayList<String> searchBoard() {
         System.out.println("Searching the board for words.");
-        for (row = 0; row < 4; row++) {
-            for (col = 0; col < 4; col++) {
-                String root = Character.toString(boggleBoard[row][col]);
-                boardCell root2 = new boardCell(row, col , boggleBoard[row][col]);
-                doMoves(root2);
-            }
+//        for (row = 0; row < 4; row++) {
+//            for (col = 0; col < 4; col++) {
+        for (boardCell cell : cellsOnBoard) {
+            recursiveSearch(cell);
         }
 
         System.out.println("Search completed.");
@@ -135,6 +132,7 @@ public class Board {
             for (int b = 0; b < 4; b++) {
                 Random r = new Random();
                 char c = (char) (r.nextInt(26) + 'a');
+                cellsOnBoard.add(new boardCell(i, b, c));
                 boggleBoard[i][b] = c;
             }
         }
