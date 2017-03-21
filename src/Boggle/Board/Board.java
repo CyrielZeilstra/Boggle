@@ -1,6 +1,11 @@
 package Boggle.Board;
 
+import Boggle.Controller.BoggleController;
+import com.sun.javafx.tk.Toolkit;
+import javafx.concurrent.Task;
+
 import javax.swing.tree.TreeNode;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -12,6 +17,7 @@ import java.util.Random;
 public class Board {
     static char[][] boggleBoard = new char[4][4];
 
+    ArrayList<String> foundWords;
     TrieNode root;
     Trie trie;
 
@@ -19,6 +25,7 @@ public class Board {
         root = new TrieNode();
         trie = new Trie();
         trie.readList();
+        foundWords = new ArrayList<>();
     }
 
     // http://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
@@ -28,8 +35,11 @@ public class Board {
     int col = 0;
 
     public void doMoves(String root){
-        ArrayList<String> combinations = new ArrayList<>();
         String prefix = root;
+
+        if (trie.search(root)){
+            foundWords.add(root);
+        }
 
         boolean u, d, r, l;
         u = row - 1 >= 0;
@@ -40,7 +50,6 @@ public class Board {
         //up
         if (u) {
             Object move = boggleBoard[row - 1][col];
-            combinations.add(prefix + boggleBoard[row - 1][col]);
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -49,7 +58,7 @@ public class Board {
         //down
         if (d) {
             Object move = boggleBoard[row + 1][col];
-            combinations.add(prefix + boggleBoard[row + 1][col]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -58,7 +67,7 @@ public class Board {
         //right
         if (r) {
             Object move = boggleBoard[row][col + 1];
-            combinations.add(prefix + boggleBoard[row][col + 1]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -66,7 +75,7 @@ public class Board {
         //left
         if (l) {
             Object move = boggleBoard[row][col - 1];
-            combinations.add(prefix + boggleBoard[row][col - 1]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -74,7 +83,7 @@ public class Board {
         //upleft
         if (u && l) {
             Object move = boggleBoard[row - 1][col - 1];
-            combinations.add(prefix + boggleBoard[row - 1][col - 1]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -82,7 +91,7 @@ public class Board {
         //upright
         if (u && r) {
             Object move = boggleBoard[row - 1][col + 1];
-            combinations.add(prefix + move);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -90,7 +99,7 @@ public class Board {
         //downleft
         if (d && l) {
             Object move = boggleBoard[row + 1][col - 1];
-            combinations.add(prefix + boggleBoard[row + 1][col - 1]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
@@ -98,14 +107,14 @@ public class Board {
         //down right
         if (d && r) {
             Object move = boggleBoard[row + 1][col + 1];
-            combinations.add(prefix + boggleBoard[row + 1][col + 1]);
+
             if (trie.startsWith(prefix + move)) {
                 doMoves(prefix + move);
             }
         }
     }
 
-    public void searchBoard() {
+    public ArrayList<String> searchBoard() {
         System.out.println("Searching the board for words.");
         for (row = 0; row < 4; row++) {
             for (col = 0; col < 4; col++) {
@@ -114,13 +123,8 @@ public class Board {
             }
         }
 
-//        for (String pre : combinations) {
-//            System.out.println("looking for : " + pre);
-//            System.out.println(trie.startsWith(pre));
-//        }
-
-        System.out.println(trie.search("zweven"));
         System.out.println("Search completed.");
+        return foundWords;
     }
 
 

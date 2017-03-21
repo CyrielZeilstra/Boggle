@@ -1,6 +1,7 @@
 package Boggle.Controller;
 
 import Boggle.Board.Board;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -8,12 +9,14 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import javax.swing.text.html.ListView;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -29,18 +32,24 @@ public class BoggleController {
     private Button startBtn;
 
     @FXML
-    public TextField logBox;
+    public TextArea logBox;
+
+    @FXML
+    public ListView listBox;
 
     private Board board = new Board();
 
     @FXML
     public void initialize() {
+
         drawBoardOnInterface();
 
         startBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                board.searchBoard();
+                for (String foundword : board.searchBoard()){
+                    logBox.appendText(foundword + "\n");
+                }
             }
         });
     }
