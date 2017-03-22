@@ -13,10 +13,11 @@ import java.util.Map;
  */
 
 public class Trie {
-    private TrieNode root;
+    private final TrieNode root;
 
     public Trie() {
         root = new TrieNode();
+        readList();
     }
 
     public void readList() {
@@ -32,7 +33,7 @@ public class Trie {
     }
 
     // Inserts a word into the trie.
-    public void insert(String word) {
+    private void insert(String word) {
         HashMap<Character, TrieNode> children = root.children;
 
         for(int i=0; i<word.length(); i++){
@@ -58,22 +59,16 @@ public class Trie {
     public boolean search(String word) {
         TrieNode t = searchNode(word);
 
-        if(t != null && t.isLeaf)
-            return true;
-        else
-            return false;
+        return t != null && t.isLeaf;
     }
 
     // Returns if there is any word in the trie
     // that starts with the given prefix.
     public boolean startsWith(String prefix) {
-        if(searchNode(prefix) == null)
-            return false;
-        else
-            return true;
+        return searchNode(prefix) != null;
     }
 
-    public TrieNode searchNode(String str){
+    private TrieNode searchNode(String str){
         Map<Character, TrieNode> children = root.children;
         TrieNode t = null;
         for(int i=0; i<str.length(); i++){

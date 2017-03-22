@@ -1,13 +1,15 @@
 package Boggle.Controller;
 
 import Boggle.Board.Board;
-import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -29,27 +31,38 @@ public class BoggleController {
     private Button startBtn;
 
     @FXML
-    public TextArea logBox;
+    private ListView listBox;
 
-    private Board board = new Board();
+    private final Board board = new Board();
+
+    @FXML
+    private Button newBoardBtn;
 
     @FXML
     public void initialize() {
 
         drawBoardOnInterface();
 
-        startBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                for (Object word : board.searchBoard()){
-                    logBox.appendText(word.toString() + "\n");
-                }
+        newBoardBtn.setOnAction(event -> {
+            Board.generateNewBoggleBoard();
+            listBox.getItems().clear();
+            drawBoardOnInterface();
+        });
+
+        startBtn.setOnAction(event -> {
+            ObservableList<String> data = FXCollections.observableArrayList();
+            for (Object word : board.searchBoard()){
+                data.add(word.toString());
             }
+            listBox.setItems(data);
         });
     }
 
     private void drawBoardOnInterface() {
         // draw Generated list on the grid.
+        mainGrid.getChildren().clear();
+        mainGrid.getColumnConstraints().clear();
+        mainGrid.getRowConstraints().clear();
         for (int row = 0; row < Board.getBoggleBoard().length; row++) {
             for (int col = 0; col < Board.getBoggleBoard().length; col++) {
                 StackPane letterSquare = new StackPane();

@@ -1,5 +1,6 @@
 package Boggle.Board;
 
+import Boggle.Controller.BoggleController;
 import Boggle.WordlistTrie.Trie;
 
 import java.util.*;
@@ -8,7 +9,7 @@ import java.util.*;
  * Created by Cyriel on 17-3-2017.
  */
 public class Board {
-    private static char[][] boggleBoard = new char[10][10];
+    private static char[][] boggleBoard = new char[6][6];
     private static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
     private ArrayList<String> foundWords;
@@ -16,15 +17,13 @@ public class Board {
 
     public Board() {
         trie = new Trie();
-        trie.readList();
         foundWords = new ArrayList<>();
     }
 
     private String recursiveSearch(LinkedList<boardCell> usedCells) {
         String prefix = getWord(usedCells);
 
-        // If our prefix is a word add it to the word list
-        // if it is not already added.
+        // If our prefix is a word add it to the word list if it is not already added.
         if (trie.search(prefix)) {
             if (!foundWords.contains(prefix)) {
                 foundWords.add(prefix);
@@ -114,6 +113,7 @@ public class Board {
     }
 
     public ArrayList<String> searchBoard() {
+        foundWords.clear();
         System.out.println("Searching the board for words.");
         LinkedList<boardCell> usedCells = new LinkedList<>();
         for (boardCell cell : cellsOnBoard) {
@@ -130,6 +130,7 @@ public class Board {
 
 
     public static void generateNewBoggleBoard() {
+        cellsOnBoard.clear();
         for (int i = 0; i < boggleBoard.length; i++) {
             for (int b = 0; b < boggleBoard.length; b++) {
                 Random r = new Random();
@@ -138,6 +139,7 @@ public class Board {
                 boggleBoard[i][b] = c;
             }
         }
+        System.out.println(Arrays.deepToString(boggleBoard));
     }
 
     public static char[][] getBoggleBoard() {

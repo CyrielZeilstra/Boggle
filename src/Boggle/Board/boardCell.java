@@ -5,9 +5,9 @@ package Boggle.Board;
  */
 final class boardCell {
 
-    private int row;
-    private int col;
-    private char characterInCell;
+    private final int row;
+    private final int col;
+    private final char characterInCell;
 
     boardCell(int row, int col, char characterInCell) {
         this.row = row;
