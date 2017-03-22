@@ -1,6 +1,5 @@
 package Boggle.Board;
 
-import Boggle.Controller.BoggleController;
 import Boggle.WordlistTrie.Trie;
 
 import java.util.*;
@@ -9,7 +8,8 @@ import java.util.*;
  * Created by Cyriel on 17-3-2017.
  */
 public class Board {
-    private static char[][] boggleBoard = new char[6][6];
+    private static int amountOfCells = 10;
+    private static char[][] boggleBoard = new char[amountOfCells][amountOfCells];
     private static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
     private ArrayList<String> foundWords;
@@ -22,7 +22,6 @@ public class Board {
 
     private String recursiveSearch(LinkedList<boardCell> usedCells) {
         String prefix = getWord(usedCells);
-
         // If our prefix is a word add it to the word list if it is not already added.
         if (trie.search(prefix)) {
             if (!foundWords.contains(prefix)) {
@@ -125,6 +124,8 @@ public class Board {
             usedCells.pollLast();
         }
         System.out.println("Search completed.");
+
+
         return foundWords;
     }
 
