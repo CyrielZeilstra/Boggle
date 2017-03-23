@@ -8,13 +8,13 @@ import java.util.*;
  * Created by Cyriel on 17-3-2017.
  */
 public class Board {
-    private static int amountOfCells = 4;
+    private static int amountOfCells = 10;
     private static char[][] boggleBoard = new char[amountOfCells][amountOfCells];
     private static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
     private ArrayList<String> foundWords;
     private Trie trie;
-    public static Map<String, ArrayList> pathMap = new HashMap<>();;
+    public static Map<String, ArrayList> pathMap = new HashMap<>();
 
     public Board() {
         trie = new Trie();
