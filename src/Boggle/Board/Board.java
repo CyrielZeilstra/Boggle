@@ -8,12 +8,13 @@ import java.util.*;
  * Created by Cyriel on 17-3-2017.
  */
 public class Board {
-    private static int amountOfCells = 10;
+    private static int amountOfCells = 4;
     private static char[][] boggleBoard = new char[amountOfCells][amountOfCells];
     private static ArrayList<boardCell> cellsOnBoard = new ArrayList<>();
 
     private ArrayList<String> foundWords;
     private Trie trie;
+    public static Map<String, ArrayList> pathMap = new HashMap<>();;
 
     public Board() {
         trie = new Trie();
@@ -24,6 +25,11 @@ public class Board {
         String prefix = getWord(usedCells);
         // If our prefix is a word add it to the word list if it is not already added.
         if (trie.search(prefix)) {
+            ArrayList templist = new ArrayList();
+            for (boardCell cell : usedCells) {
+               templist.add(cell);
+            }
+            pathMap.put(prefix, templist);
             if (!foundWords.contains(prefix)) {
                 foundWords.add(prefix);
             }
@@ -124,7 +130,6 @@ public class Board {
             usedCells.pollLast();
         }
         System.out.println("Search completed.");
-
 
         return foundWords;
     }

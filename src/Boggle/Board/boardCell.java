@@ -3,7 +3,7 @@ package Boggle.Board;
 /**
  * Created by Cyriel on 21-3-2017.
  */
-final class boardCell {
+public class boardCell {
 
     private final int row;
     private final int col;
@@ -15,11 +15,11 @@ final class boardCell {
         this.characterInCell = characterInCell;
     }
 
-    int getRow() {
+    public int getRow() {
         return row;
     }
 
-    int getCol() {
+    public int getCol() {
         return col;
     }
 
